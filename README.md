@@ -204,9 +204,3 @@ All market-specific constants are derived from MAP source documents:
 - Municipal market income statements (Kenya)
 
 ---
-
-## About
-
-Built by **Shreyas** — Michigan Ross MBA 2026.
-
-This tool demonstrates production-grade financial modeling + AI tooling for the type of infrastructure investment analysis relevant to municipal governments and development finance institutions across sub-Saharan Africa.
