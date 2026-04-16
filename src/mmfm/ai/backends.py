@@ -144,6 +144,25 @@ class ClaudeBackend:
         return response.content[0].text
 
 
+def is_ollama_reachable(base_url: str = "http://localhost:11434") -> bool:
+    """
+    Return True if an Ollama server is reachable at *base_url*.
+
+    Uses a short timeout so the UI does not hang when running in a
+    cloud environment (Streamlit Cloud, Docker, etc.) where localhost
+    has no Ollama process.
+    """
+    try:
+        req = urllib.request.Request(
+            f"{base_url.rstrip('/')}/api/tags",
+            method="GET",
+        )
+        with urllib.request.urlopen(req, timeout=3) as resp:
+            return resp.status == 200
+    except Exception:
+        return False
+
+
 def get_backend(task: str = "") -> LLMBackend:
     """
     Return the appropriate LLM backend for the current configuration.
@@ -178,9 +197,22 @@ def get_backend(task: str = "") -> LLMBackend:
         model_id = _resolve_claude_model(task)
         return ClaudeBackend(api_key=api_key, model_id=model_id)
 
-    # Default: Ollama
+    # Default: Ollama — but fall back to Claude if Ollama is unreachable
+    # and an API key is available (e.g. running on Streamlit Cloud).
+    ollama_url = settings.ollama.base_url
+    if not is_ollama_reachable(ollama_url):
+        api_key = settings.anthropic.api_key
+        if api_key:
+            model_id = _resolve_claude_model(task)
+            return ClaudeBackend(api_key=api_key, model_id=model_id)
+        raise RuntimeError(
+            f"Cannot reach Ollama at {ollama_url}.\n"
+            "If running locally: start Ollama with `ollama serve` then `ollama pull llama3.2`.\n"
+            "If running on a hosted/cloud deployment: Ollama is not available — "
+            "set ANTHROPIC_API_KEY to use the Claude backend instead."
+        )
     return OllamaBackend(
-        base_url=settings.ollama.base_url,
+        base_url=ollama_url,
         model=settings.ollama.model,
     )
 

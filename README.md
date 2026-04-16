@@ -10,11 +10,17 @@ Built as the analytical engine for a MAP capstone project evaluating investment 
 
 ## Live Dashboard
 
+**[Open the dashboard →](https://mmfm-analyzer-yfc86cidntp3ld43gp55pd.streamlit.app/)**
+
+Or run locally:
+
 ```bash
 streamlit run src/mmfm/app.py
 ```
 
-Opens at `http://localhost:8501`.
+![MMFM Dashboard — Portfolio tab showing five MAP markets ranked by MIRI score, DSCR, and NPV](assets/dashboard.png)
+
+> Portfolio tab: five MAP demo markets ranked by MIRI score, DSCR, and NPV. Sidebar controls let you configure any market's revenue model, capital costs, and financing in real time.
 
 ### Using the Dashboard
 
@@ -40,6 +46,15 @@ The sidebar is the primary input surface — configure your market, then explore
 
 ---
 
+## Documentation
+
+| Doc | What it covers |
+|---|---|
+| [METHODOLOGY.md](METHODOLOGY.md) | Why those 7 sensitivity variables, how fee collection rates were calibrated from field data, what the MIRI scoring weights represent |
+| [CASE-STUDY.md](CASE-STUDY.md) | One sample market walked through end-to-end — inputs, base case, scenario table, tornado chart, Monte Carlo, and investment recommendation |
+
+---
+
 ## Demo Portfolio
 
 Five MAP markets pre-loaded, grounded in field source data.
@@ -54,7 +69,7 @@ mmfm compare --format json
 ## Features
 
 - **Financial engine** — NPV, IRR, payback, DSCR, operating margins (deterministic Python, no AI)
-- **Scenario analysis** — Base / optimistic / pessimistic with source-calibrated fee collection rates (Lusaka avg: 38%)
+- **Scenario analysis** — Base / optimistic / pessimistic with source-calibrated fee collection rates (field avg: 38%)
 - **Revenue models** — Simple occupancy, facility-type breakdown (field benchmarks), produce/wholesale commission, combined
 - **Structured debt** — Senior + concessional tranches with annuity-formula debt service
 - **Technology modules** — Cold storage ($1,528/m³) and solar PV ($1,070/kW) CapEx + O&M

@@ -117,7 +117,7 @@ with st.sidebar:
             base_rental = st.slider("Annual Stall Rental Income (USD)", 50_000, 500_000, 200_000, 10_000, format="$%d")
             fee_collection_rate = st.slider(
                 "Fee Collection Rate", 0.10, 1.0, 0.65, 0.05,
-                help="Lusaka system avg: 38%. Well-managed: 65–85%.",
+                help="Field system avg: 38%. Well-managed: 65–85%.",
             )
             lockup_count = stall_count = pitch_count = 0
             lockup_util = stall_util = pitch_util = 0.0
@@ -477,7 +477,7 @@ with tab_scenarios:
     st.markdown(
         "Compare cash flow trajectories across **base**, **optimistic**, and **pessimistic** "
         "scenarios. Adjust inputs in the sidebar. Key levers: fee collection rate "
-        "(Lusaka avg: 0.38), CapEx size, and discount rate."
+        "(field avg: 0.38), CapEx size, and discount rate."
     )
 
     import plotly.express as px
@@ -1101,13 +1101,36 @@ with tab_monte_carlo:
 with tab_ai:
     st.header("🤖 AI Narrative Generator")
 
-    backend_env = os.environ.get("MMFM_LLM_BACKEND", "ollama")
-    st.markdown(f"**Current LLM backend:** `{backend_env}`")
+    # ── Detect which backend is actually usable right now ────────────────────
+    from mmfm.ai.backends import is_ollama_reachable as _ollama_ok
 
-    st.info(
-        "Using Ollama (free)? Run: `ollama serve`  then  `ollama pull llama3.2`  \n"
-        "Using Claude? Set `MMFM_LLM_BACKEND=claude` and `ANTHROPIC_API_KEY` in your environment."
-    )
+    _api_key_set = bool(os.environ.get("ANTHROPIC_API_KEY", "").strip())
+    _backend_env = os.environ.get("MMFM_LLM_BACKEND", "ollama").lower()
+
+    # Resolve the effective backend: prefer explicit env var; otherwise
+    # auto-detect based on what is reachable.
+    if _backend_env == "claude" or (_backend_env == "ollama" and not _ollama_ok() and _api_key_set):
+        _effective_backend = "claude"
+    elif _backend_env == "ollama" and _ollama_ok():
+        _effective_backend = "ollama"
+    else:
+        _effective_backend = "none"
+
+    if _effective_backend == "claude":
+        st.success("**Backend: Claude API** — connected.")
+    elif _effective_backend == "ollama":
+        st.success("**Backend: Ollama (local)** — connected.")
+    else:
+        st.error(
+            "**No LLM backend available.**  \n\n"
+            "This dashboard is hosted on Streamlit Cloud, so Ollama (which runs locally on your "
+            "machine) cannot be reached from here.  \n\n"
+            "**To enable AI narratives on this deployment:** "
+            "add `ANTHROPIC_API_KEY` as a Streamlit Cloud secret "
+            "(*App settings → Secrets → paste `ANTHROPIC_API_KEY = \"sk-ant-...\"`*).  \n\n"
+            "**To use Ollama:** run the dashboard locally with `streamlit run src/mmfm/app.py` "
+            "and start Ollama with `ollama serve` + `ollama pull llama3.2`."
+        )
 
     sample_data = {
         "market": "Market 5",
@@ -1190,15 +1213,13 @@ with tab_ai:
                         st.markdown("_No anomalies flagged._")
 
             except Exception as exc:
-                st.warning(
-                    f"Could not reach the LLM backend ({backend_env}). "
-                    f"Error: `{exc}`  \n\n"
-                    "**To fix with Ollama (free):**  \n"
-                    "1. Install Ollama: https://ollama.com  \n"
-                    "2. Run `ollama serve` in a terminal  \n"
-                    "3. Run `ollama pull llama3.2`  \n"
-                    "4. Reload this page and try again.  \n\n"
-                    "**To use Claude API:**  \n"
-                    "Set `MMFM_LLM_BACKEND=claude` and `ANTHROPIC_API_KEY=<your-key>` "
-                    "in your environment before launching Streamlit."
-                )
+                if _effective_backend == "none":
+                    st.error(
+                        "No LLM backend is configured. Add `ANTHROPIC_API_KEY` as a "
+                        "Streamlit Cloud secret to enable AI narratives on this deployment."
+                    )
+                else:
+                    st.warning(
+                        f"LLM backend (`{_effective_backend}`) returned an error:  \n"
+                        f"`{exc}`"
+                    )

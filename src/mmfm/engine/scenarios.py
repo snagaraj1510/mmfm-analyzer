@@ -86,7 +86,7 @@ PESSIMISTIC_SCENARIO = ScenarioParams(
     fee_escalation_rate=0.05,
     capex_overrun_pct=0.25,
     grant_disbursement_delay_years=1,
-    fee_collection_rate=0.38,       # Lusaka system average — on-the-ground reality
+    fee_collection_rate=0.38,       # field system average — on-the-ground reality
     description="Pessimistic: low occupancy, 25% overrun, 1-year grant delay",
 )
 
