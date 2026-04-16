@@ -1102,7 +1102,13 @@ with tab_ai:
     st.header("🤖 AI Narrative Generator")
 
     # ── Detect which backend is actually usable right now ────────────────────
-    from mmfm.ai.backends import is_ollama_reachable as _ollama_ok
+    def _ollama_ok(base_url: str = "http://localhost:11434") -> bool:
+        import urllib.request
+        try:
+            with urllib.request.urlopen(f"{base_url.rstrip('/')}/api/tags", timeout=3) as r:
+                return r.status == 200
+        except Exception:
+            return False
 
     _api_key_set = bool(os.environ.get("ANTHROPIC_API_KEY", "").strip())
     _backend_env = os.environ.get("MMFM_LLM_BACKEND", "ollama").lower()
