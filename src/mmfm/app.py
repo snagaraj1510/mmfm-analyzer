@@ -157,8 +157,8 @@ with tab_portfolio:
                 "Fee Coll. Rate": lambda v: f"{v:.0%}" if v is not None else "—",
             }
         )
-        .applymap(_color_irr, subset=["IRR (%)"])
-        .applymap(_color_dscr, subset=["Min DSCR"])
+        .map(_color_irr, subset=["IRR (%)"])
+        .map(_color_dscr, subset=["Min DSCR"])
     )
 
     st.dataframe(styled, use_container_width=True, height=220)
