@@ -18,9 +18,6 @@ Or run locally:
 streamlit run src/mmfm/app.py
 ```
 
-![MMFM Dashboard — Portfolio tab showing five MAP markets ranked by MIRI score, DSCR, and NPV](assets/dashboard.png)
-
-> Portfolio tab: five MAP demo markets ranked by MIRI score, DSCR, and NPV. Sidebar controls let you configure any market's revenue model, capital costs, and financing in real time.
 
 ### Using the Dashboard
 
