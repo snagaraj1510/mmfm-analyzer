@@ -20,15 +20,7 @@ Opens at `http://localhost:8501` — five tabs covering the full analysis pipeli
 
 ## Demo Portfolio
 
-Five MAP markets pre-loaded, grounded in ICLEI Africa source data:
-
-| Market | Country | NPV (USD) | IRR | Min DSCR | MIRI Score | Signal |
-|---|---|---|---|---|---|---|
-| Pemba Eduardo Mondlane | Mozambique | $1.4M | 45.5% | 2.1 | — | Optimistic anchor |
-| Tsoka Market | Malawi | $420K | 19% | 1.45 | 81 | Cleanest portfolio signal |
-| Lizulu Market | Malawi | $380K | 17% | 1.32 | 81 | Strong governance |
-| Chainda Market | Zambia | $290K | 14% | 1.28 | — | 82% governance score |
-| Kisumu Municipal | Kenya | -$320K | -8% | -5.8x | — | Stress-test anchor |
+Five MAP markets pre-loaded, grounded in ICLEI Africa source data.
 
 ```bash
 mmfm compare          # Terminal table
