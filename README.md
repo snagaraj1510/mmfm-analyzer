@@ -14,7 +14,29 @@ Built as the analytical engine for a MAP capstone project with ICLEI Africa, eva
 streamlit run src/mmfm/app.py
 ```
 
-Opens at `http://localhost:8501` — five tabs covering the full analysis pipeline.
+Opens at `http://localhost:8501`.
+
+### Using the Dashboard
+
+The sidebar is the primary input surface — configure your market, then explore results across five tabs.
+
+**Sidebar — five sections:**
+
+| Section | What to set |
+|---|---|
+| **Revenue Model** | Pick a model: *Simple* (occupancy × stall rent), *Facility Types* (lock-ups / stalls / pitches with per-type utilisation and collection rates), *Produce Market* (wholesale commission), or *Combined*. Set unit counts, rents, and occupancy targets. |
+| **Capital Costs** | Total CapEx, construction schedule, grant amount, contingency %. Toggle ❄️ Cold Storage and ☀️ Solar PV modules with unit/kW counts. Net CapEx shown live. |
+| **Operating Costs** | Fixed annual OpEx (with escalation %) or % of Revenue (set personnel / operations / R&M / finance-admin splits). |
+| **Financing** | Simple (enter annual debt service directly) or Structured Debt (senior tranche + concessional tranche; annual payment auto-calculated via annuity formula). |
+| **Market Parameters** | Discount rate, projection horizon, inflation rate. |
+
+**Five tabs:**
+
+1. **Portfolio** — Side-by-side comparison of the five MAP demo markets; MIRI / governance / DSCR rankings.
+2. **Scenarios** — Base / Optimistic / Pessimistic results for your configured market. NPV, IRR, payback, DSCR, operating margin table. Scenario cash flow chart.
+3. **Sensitivity** — Tornado chart ranking the seven highest-impact variables by NPV swing.
+4. **Monte Carlo** — 10K-iteration simulation. P10/P50/P90 NPV distribution, probability of positive NPV.
+5. **AI Narrative** — LLM-generated executive summary, key risks, and recommendation grounded in engine outputs (requires Ollama running locally or `ANTHROPIC_API_KEY` set).
 
 ---
 
@@ -33,6 +55,9 @@ mmfm compare --format json
 
 - **Financial engine** — NPV, IRR, payback, DSCR, operating margins (deterministic Python, no AI)
 - **Scenario analysis** — Base / optimistic / pessimistic with source-calibrated fee collection rates (Lusaka avg: 38%)
+- **Revenue models** — Simple occupancy, facility-type breakdown (ReMark benchmarks), produce/wholesale commission, combined
+- **Structured debt** — Senior + concessional tranches with annuity-formula debt service
+- **Technology modules** — Cold storage (ICLEI $1,528/m³) and solar PV ($1,070/kW) CapEx + O&M
 - **Sensitivity + tornado** — Sweep 7 variables, ranked by NPV impact
 - **Monte Carlo** — 10K iterations, P10/P50/P90 distribution, probability of positive NPV
 - **AI narrative** — Executive summaries via Ollama (free, local) or Claude API (optional)
