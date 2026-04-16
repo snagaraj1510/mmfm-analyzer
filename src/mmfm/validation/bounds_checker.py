@@ -43,21 +43,21 @@ PLAUSIBLE_BOUNDS: dict[str, dict] = {
     "annual_revenue_usd":       {"min": 1000, "max": 50_000_000, "unit": "USD"},
     "stall_monthly_rent_usd":   {"min": 1,    "max": 5000,       "unit": "USD",
                                  "typical_min": 30, "typical_max": 35,
-                                 "notes": "Kisumu field data: $30-35/month typical"},
+                                 "notes": "Field data: $30-35/month typical"},
     "vendor_count":             {"min": 10,   "max": 10000,      "unit": "count"},
     "capex_total_usd":          {"min": 10000, "max": 500_000_000, "unit": "USD"},
     "construction_months":      {"min": 1,    "max": 120,        "unit": "months"},
 
-    # Fee collection — grounded in Lusaka source data
+    # Fee collection — grounded in MAP field data
     "fee_collection_rate":      {"min": 0.10, "max": 1.0, "unit": "ratio",
                                  "typical": 0.38,
-                                 "notes": "Lusaka system avg 0.38; Mandevu worst case 0.10"},
+                                 "notes": "Field data: system avg 0.38; worst case 0.10"},
 
-    # Willingness-to-pay — Kisumu field data
+    # Willingness-to-pay — MAP field data
     "incremental_wtp_usd_per_stall_per_month": {
         "min": 0, "max": 50, "unit": "USD/stall/month",
         "typical": 5,
-        "notes": "Kisumu field data: ~$5/stall/month typical incremental WTP",
+        "notes": "Field data: ~$5/stall/month typical incremental WTP",
     },
 
     # Macroeconomic — Kenya, Tanzania, Mozambique

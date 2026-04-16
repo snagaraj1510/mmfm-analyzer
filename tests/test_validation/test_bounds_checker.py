@@ -34,8 +34,8 @@ class TestBoundsChecker:
         result = check_bounds("fee_collection_rate", 0.38)
         assert result.status == BoundsStatus.PASS
 
-    def test_fee_collection_rate_mandevu_floor_passes(self):
-        """Mandevu worst case of 0.10 should be at the boundary."""
+    def test_fee_collection_rate_floor_passes(self):
+        """Worst case of 0.10 should be at the boundary."""
         result = check_bounds("fee_collection_rate", 0.10)
         # At exactly the min bound — should pass or warning
         assert result.status in (BoundsStatus.PASS, BoundsStatus.WARNING)

@@ -11,9 +11,9 @@ class MarketProfile:
     Contains pre-computed financial metrics or inputs for a named market.
     Used for portfolio-level comparison across markets.
     """
-    name: str                         # e.g. "Pemba Eduardo Mondlane"
+    name: str                         # e.g. "Market 1"
     country: str                      # e.g. "Mozambique"
-    city: str                         # e.g. "Pemba"
+    city: str                         # e.g. "East Africa"
     npv_usd: Optional[float] = None
     irr: Optional[float] = None       # as decimal, e.g. 0.455 for 45.5%
     payback_years: Optional[float] = None

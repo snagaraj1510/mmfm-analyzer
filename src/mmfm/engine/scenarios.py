@@ -45,8 +45,8 @@ class ScenarioParams:
     fee_escalation_rate: float          # Annual fee escalation
     capex_overrun_pct: float            # e.g. 0.10 = 10% overrun
     grant_disbursement_delay_years: int # Delay in grant receipt (0 = on schedule)
-    # Fee collection rate calibrated from MAP source data:
-    #   pessimistic: 0.38 (Lusaka system average), floor: 0.10 (Mandevu worst case)
+    # Fee collection rate calibrated from MAP field data:
+    #   pessimistic: 0.38 (system average), floor: 0.10 (worst case)
     #   base: ~0.65 (below-average collection), optimistic: ~0.85 (well-managed market)
     fee_collection_rate: float = 1.0   # Fraction of billed revenue collected
     description: str = ""

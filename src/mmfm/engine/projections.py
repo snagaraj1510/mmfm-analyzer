@@ -56,7 +56,7 @@ class RevenueInputs:
     occupancy_target: float = 0.85        # Target occupancy after ramp
     other_income_annual: float = 0.0
     # Fee collection rate: fraction of billed revenue actually collected.
-    # Source data: Lusaka system avg 0.38, Mandevu worst case 0.10, best case 1.0.
+    # Field data: system avg 0.38, worst case 0.10, best case 1.0.
     fee_collection_rate: float = 1.0      # Default: full collection (conservative assumption)
 
     # ── Revenue model ─────────────────────────────────────────────────────────

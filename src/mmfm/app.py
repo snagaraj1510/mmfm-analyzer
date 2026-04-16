@@ -1110,7 +1110,7 @@ with tab_ai:
     )
 
     sample_data = {
-        "market": "Chainda Market, Lusaka",
+        "market": "Market 5",
         "npv_usd": 290000,
         "irr_pct": 14.0,
         "payback_years": 10.5,

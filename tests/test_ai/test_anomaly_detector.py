@@ -20,9 +20,9 @@ class TestAnomalyDetector:
         assert len(npv_anomalies) >= 1
 
     def test_solar_pv_disproportion_flagged(self):
-        """Solar PV CAPEX > 80% of annual revenue should be flagged (Kisumu lesson)."""
+        """Solar PV CAPEX > 80% of annual revenue should be flagged."""
         metrics = {"solar_pv_capex": 1_070_000}
-        annual_existing_revenue = 1_030_000  # Kisumu reference case
+        annual_existing_revenue = 1_030_000
         report = detect_anomalies(metrics, annual_existing_revenue=annual_existing_revenue)
         solar_anomalies = [a for a in report.anomalies if a.metric == "solar_pv_capex"]
         assert len(solar_anomalies) == 1

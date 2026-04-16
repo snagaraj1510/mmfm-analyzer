@@ -3,7 +3,7 @@ Anomaly detection for financial model inputs and AI outputs.
 
 Flags suspicious numbers using rule-based checks and optionally Claude.
 Key rules:
-- Solar PV CAPEX > 80% of annual existing revenue → flag (Kisumu lesson)
+- Solar PV CAPEX > 80% of annual existing revenue → flag (field data lesson)
 - Values outside PLAUSIBLE_BOUNDS → flag
 - Internal inconsistencies (negative revenue + positive margin, etc.)
 
@@ -85,9 +85,9 @@ def detect_anomalies(metrics: dict, annual_existing_revenue: Optional[float] = N
                 rule="bounds_warning",
             )
 
-    # ── Solar PV CAPEX disproportion rule (Kisumu lesson) ──────────────────
+    # ── Solar PV CAPEX disproportion rule ──────────────────────────────────
     # Flag if Solar PV CAPEX > 80% of the market's annual existing revenue.
-    # This near-inviable bundle requires TA support (Kisumu: $1.07M solar vs $1.03M revenue).
+    # This near-inviable bundle requires TA support (field case: $1.07M solar vs $1.03M revenue).
     solar_capex = metrics.get("solar_pv_capex")
     if solar_capex is not None and annual_existing_revenue is not None:
         if annual_existing_revenue > 0:
@@ -100,7 +100,7 @@ def detect_anomalies(metrics: dict, annual_existing_revenue: Optional[float] = N
                         f"Solar PV CAPEX ({solar_capex:,.0f}) is {ratio:.0%} of annual existing revenue "
                         f"({annual_existing_revenue:,.0f}). Ratio > 80% indicates a near-inviable bundle "
                         "without technical assistance (TA) support. "
-                        "Reference: Kisumu market model — $1.07M solar vs $1.03M annual revenue."
+                        "Reference: field case — $1.07M solar vs $1.03M annual revenue."
                     ),
                     severity="high",
                     rule="solar_pv_capex_disproportion",

@@ -351,7 +351,7 @@ def compare(
     min_irr: float = typer.Option(0.12, "--min-irr", help="Minimum IRR threshold for investment-ready flag"),
     min_dscr: float = typer.Option(1.2, "--min-dscr", help="Minimum DSCR threshold for investment-ready flag"),
 ) -> None:
-    """Compare MAP demo portfolio markets (Pemba, Tsoka/Lizulu, Chainda, Kisumu)."""
+    """Compare MAP demo portfolio markets (Markets 1–5)."""
     from mmfm.demo.demo_markets import DEMO_PORTFOLIO  # noqa: PLC0415
     from mmfm.engine.comparison import compare_markets
     import json

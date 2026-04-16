@@ -91,29 +91,29 @@ class TestFullPipeline:
         assert "markets" in data
         assert "investment_ready" in data
         names = [m["market"] for m in data["markets"]]
-        assert "Pemba Eduardo Mondlane" in names
-        assert "Kisumu Municipal Market" in names
+        assert "Market 1" in names
+        assert "Market 2" in names
 
-    def test_compare_pemba_is_investment_ready(self):
-        """Pemba should be investment-ready (IRR 45.5% >> 12% threshold)."""
+    def test_compare_market1_is_investment_ready(self):
+        """Market 1 should be investment-ready (IRR 45.5% >> 12% threshold)."""
         result = runner.invoke(app, ["compare", "--format", "json"])
         data = json.loads(result.output)
-        assert "Pemba Eduardo Mondlane" in data["investment_ready"]
+        assert "Market 1" in data["investment_ready"]
 
-    def test_compare_kisumu_not_investment_ready(self):
-        """Kisumu stress-test market should NOT be investment-ready."""
+    def test_compare_market2_not_investment_ready(self):
+        """Market 2 stress-test market should NOT be investment-ready."""
         result = runner.invoke(app, ["compare", "--format", "json"])
         data = json.loads(result.output)
-        assert "Kisumu Municipal Market" not in data["investment_ready"]
+        assert "Market 2" not in data["investment_ready"]
 
-    def test_compare_npv_ranking_pemba_first(self):
-        """Pemba has the highest NPV in the demo portfolio."""
+    def test_compare_npv_ranking_market1_first(self):
+        """Market 1 has the highest NPV in the demo portfolio."""
         result = runner.invoke(app, ["compare", "--format", "json"])
         data = json.loads(result.output)
-        assert data["npv_ranking"][0] == "Pemba Eduardo Mondlane"
+        assert data["npv_ranking"][0] == "Market 1"
 
-    def test_compare_npv_ranking_kisumu_last(self):
-        """Kisumu has negative NPV and should rank last."""
+    def test_compare_npv_ranking_market2_last(self):
+        """Market 2 has negative NPV and should rank last."""
         result = runner.invoke(app, ["compare", "--format", "json"])
         data = json.loads(result.output)
-        assert data["npv_ranking"][-1] == "Kisumu Municipal Market"
+        assert data["npv_ranking"][-1] == "Market 2"

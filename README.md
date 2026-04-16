@@ -185,11 +185,11 @@ pytest -k "hallucination" # Anti-hallucination tests
 ## Data Sources
 
 All market-specific constants are derived from MAP source documents:
-- Municipal market financial model data (Pemba Eduardo Mondlane)
+- Municipal market financial model data (Sub-Saharan Africa, five sites)
 - Market operator fund model (fee collection and cost structure benchmarks)
-- Lusaka Municipal Markets Report (fee collection benchmarks)
-- Lilongwe Markets Report (Tsoka/Lizulu MIRI scores)
-- Kisumu Income Statement (Solar PV CAPEX stress-test data)
+- Municipal market fee collection reports (Zambia)
+- Municipal market MIRI assessments (Malawi)
+- Municipal market income statements (Kenya)
 
 ---
 

@@ -123,10 +123,10 @@ class TestGenerateFinancialNarrative:
         mock_backend = MagicMock()
         mock_backend.complete.return_value = json.dumps(fake_response)
         with patch("mmfm.ai.narrator.get_backend", return_value=mock_backend):
-            generate_financial_narrative({}, rag_context="Kisumu revenue context")
+            generate_financial_narrative({}, rag_context="sample revenue context")
 
         prompt_arg = mock_backend.complete.call_args[1].get("prompt") or mock_backend.complete.call_args[0][0]
-        assert "Kisumu revenue context" in prompt_arg
+        assert "sample revenue context" in prompt_arg
 
     def test_no_rag_context_uses_fallback(self):
         """When rag_context is empty, prompt includes the no-context fallback text."""

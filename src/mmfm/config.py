@@ -82,14 +82,14 @@ class MarketConfig(BaseModel):
     lead_time_standard_months_min: int = 3
     lead_time_standard_months_max: int = 6
 
-    # Fee collection benchmarks (from Lusaka data)
-    fee_collection_rate_lusaka_avg: float = 0.38      # Lusaka system average
-    fee_collection_rate_worst_case: float = 0.10      # Mandevu worst case
+    # Fee collection benchmarks (MAP field data)
+    fee_collection_rate_lusaka_avg: float = 0.38      # System average
+    fee_collection_rate_worst_case: float = 0.10      # Worst case
     fee_collection_rate_best_case: float = 1.0
 
-    # Willingness-to-pay (from Kisumu field data)
+    # Willingness-to-pay (MAP field data)
     incremental_wtp_usd_per_stall_per_month: float = 5.0   # Typical
-    stall_monthly_rent_typical_usd: float = 32.5            # Midpoint of Kisumu 30-35
+    stall_monthly_rent_typical_usd: float = 32.5            # Field midpoint
 
 
 class Settings(BaseModel):
