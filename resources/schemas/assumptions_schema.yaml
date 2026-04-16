@@ -1,0 +1,16 @@
+name: assumptions_model
+version: "1.0"
+required_sheets:
+  - name: "Assumptions"
+    required_columns:
+      - name: "parameter"
+        type: string
+      - name: "value"
+        type: float
+      - name: "unit"
+        type: string
+    optional_columns:
+      - name: "source"
+        type: string
+      - name: "notes"
+        type: string

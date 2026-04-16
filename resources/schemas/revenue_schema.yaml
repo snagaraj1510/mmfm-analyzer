@@ -1,0 +1,38 @@
+name: revenue_model
+version: "1.0"
+required_sheets:
+  - name: "Revenue Projections"
+    required_columns:
+      - name: "year"
+        type: integer
+        min: 2024
+        max: 2050
+      - name: "stall_rental_income"
+        type: float
+        min: 0
+        currency: true
+      - name: "vendor_fees"
+        type: float
+        min: 0
+        currency: true
+      - name: "market_levies"
+        type: float
+        min: 0
+        currency: true
+      - name: "occupancy_rate"
+        type: float
+        min: 0.0
+        max: 1.0
+    optional_columns:
+      - name: "other_income"
+        type: float
+        min: 0
+
+  - name: "Assumptions"
+    required_columns:
+      - name: "parameter"
+        type: string
+      - name: "value"
+        type: float
+      - name: "unit"
+        type: string

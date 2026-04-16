@@ -1,0 +1,54 @@
+name: capex_model
+version: "1.1"
+required_sheets:
+  - name: "Capital Expenditure"
+    required_columns:
+      - name: "item"
+        type: string
+      - name: "cost_estimate"
+        type: float
+        min: 0
+      - name: "year"
+        type: integer
+      - name: "funding_source"
+        type: string
+        allowed_values:
+          - "municipal_budget"
+          - "grant"
+          - "ppp"
+          - "bond"
+          - "other"
+    optional_columns:
+      - name: "lead_time_months"
+        type: integer
+        min: 1
+        max: 36
+        validation_notes: "Roofing typically 12 months (outlier); all others 3-6 months. Flag if roofing lead_time < 6."
+      - name: "item_category"
+        type: string
+        allowed_values:
+          - "roofing"
+          - "electrical"
+          - "plumbing"
+          - "civil_works"
+          - "solar_pv"
+          - "cold_storage"
+          - "access_roads"
+          - "drainage"
+          - "security"
+          - "it_infrastructure"
+          - "other"
+      - name: "contingency_pct"
+        type: float
+        min: 0.0
+        max: 0.50
+
+lead_time_rules:
+  - item_pattern: "roof"
+    min_lead_time_months: 6
+    warning_message: "Roofing items typically require 12-month lead time. Value < 6 months is likely underestimated."
+    typical_lead_time_months: 12
+  - item_pattern: "solar"
+    min_lead_time_months: 2
+    warning_message: "Solar PV procurement typically requires 2-4 months lead time."
+    typical_lead_time_months: 3

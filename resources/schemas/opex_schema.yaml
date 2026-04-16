@@ -1,0 +1,28 @@
+name: opex_model
+version: "1.0"
+required_sheets:
+  - name: "Operating Expenditure"
+    required_columns:
+      - name: "year"
+        type: integer
+        min: 2024
+        max: 2050
+      - name: "staffing_costs"
+        type: float
+        min: 0
+      - name: "maintenance_costs"
+        type: float
+        min: 0
+      - name: "utilities_costs"
+        type: float
+        min: 0
+      - name: "admin_costs"
+        type: float
+        min: 0
+    optional_columns:
+      - name: "total_opex"
+        type: float
+        min: 0
+      - name: "debt_service"
+        type: float
+        min: 0
