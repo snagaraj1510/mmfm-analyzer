@@ -110,7 +110,7 @@ with st.sidebar:
         revenue_model_type = st.radio(
             "Revenue type",
             ["Simple", "Facility Types", "Produce Market", "Combined"],
-            help="Simple: single stall rental. Facility Types: lock-ups/stalls/pitches with real collection rates (ReMark data). Produce: commission on wholesale throughput.",
+            help="Simple: single stall rental. Facility Types: lock-ups/stalls/pitches with per-type collection rates. Produce: commission on wholesale throughput.",
         )
 
         if revenue_model_type == "Simple":
@@ -133,21 +133,21 @@ with st.sidebar:
             lockup_rent = c2.number_input("Rent (USD/mo)", 1, 500, 25, key="lu_rent")
             lockup_util = st.slider("Utilisation", 0.0, 1.0, 0.88, 0.01, key="lu_util", format="%.0f%%")
             lockup_coll = st.slider("Collection Rate", 0.0, 1.0, 0.46, 0.01, key="lu_coll",
-                format="%.0f%%", help="ReMark benchmark: 46%")
+                format="%.0f%%", help="Industry benchmark: 46%")
             st.markdown("**Market Stalls**")
             c1, c2 = st.columns(2)
             stall_count = c1.number_input("Count", 0, 5000, 980, 10, key="st_cnt")
             stall_rent = c2.number_input("Rent (USD/mo)", 1, 200, 5, key="st_rent")
             stall_util = st.slider("Utilisation", 0.0, 1.0, 0.56, 0.01, key="st_util", format="%.0f%%")
             stall_coll = st.slider("Collection Rate", 0.0, 1.0, 0.21, 0.01, key="st_coll",
-                format="%.0f%%", help="ReMark benchmark: 21%")
+                format="%.0f%%", help="Industry benchmark: 21%")
             st.markdown("**Pitches / Open Spaces**")
             c1, c2 = st.columns(2)
             pitch_count = c1.number_input("Count", 0, 5000, 1400, 10, key="pt_cnt")
             pitch_rent = c2.number_input("Rent (USD/mo)", 1, 100, 3, key="pt_rent")
             pitch_util = st.slider("Utilisation", 0.0, 1.0, 0.49, 0.01, key="pt_util", format="%.0f%%")
             pitch_coll = st.slider("Collection Rate", 0.0, 1.0, 0.23, 0.01, key="pt_coll",
-                format="%.0f%%", help="ReMark benchmark: 23%")
+                format="%.0f%%", help="Industry benchmark: 23%")
             produce_tonnes = produce_price = commission_rate_val = food_waste = 0.0
 
             # Live revenue estimate
@@ -165,7 +165,7 @@ with st.sidebar:
             produce_price = st.slider("Produce Price (USD/tonne)", 50, 1_000, 380, 10)
             commission_rate_val = st.slider("Commission Rate", 0.01, 0.15, 0.05, 0.005, format="%.1f%%")
             food_waste = st.slider("Food Waste Factor", 0.05, 0.40, 0.20, 0.01,
-                help="Cold storage reduces this. 20% is the ReMark baseline.")
+                help="Cold storage reduces this. 20% is a typical field baseline.")
             est_rev = produce_tonnes * (1 - food_waste) * produce_price * commission_rate_val
             st.metric("Est. Year 1 Revenue", f"${est_rev:,.0f}")
 
@@ -194,7 +194,7 @@ with st.sidebar:
             food_waste = st.slider("Food Waste Factor", 0.05, 0.40, 0.20, 0.01)
 
         fee_escalation = st.slider("Fee Escalation/yr", 0.0, 0.15, 0.03, 0.01, format="%.0f%%",
-            help="Annual rental/fee growth rate (ReMark: 3%)")
+            help="Annual rental/fee growth rate (field avg: 3%)")
 
     # ── Capital Costs ──────────────────────────────────────────────────────
     with st.expander("🏗️ Capital Costs", expanded=True):
@@ -211,14 +211,14 @@ with st.sidebar:
         if cold_storage_on:
             cold_units = st.number_input("Cold Storage Rooms", 1, 200, 9)
             cold_cost_m3 = st.number_input("Install Cost (USD/m³)", 500, 5_000, 1_528,
-                help="ICLEI Africa benchmark: $1,528/m³")
+                help="Industry benchmark: $1,528/m³")
         else:
             cold_units, cold_cost_m3 = 0, 1527.78
 
         if solar_on:
             solar_kw = float(st.number_input("Solar Capacity (kW)", 10, 5_000, 150))
             solar_cost_kw = st.number_input("Install Cost (USD/kW)", 500, 3_000, 1_070,
-                help="ICLEI Africa benchmark: $1,070/kW")
+                help="Industry benchmark: $1,070/kW")
         else:
             solar_kw, solar_cost_kw = 0.0, 1070.0
 
@@ -239,7 +239,7 @@ with st.sidebar:
             personnel_pct = operations_pct = rm_pct = finance_admin_pct = 0.0
         else:
             base_opex = 0
-            st.caption("Cost structure (% of annual revenue) — ReMark Type A benchmarks:")
+            st.caption("Cost structure (% of annual revenue) — field benchmarks:")
             personnel_pct = st.slider("Personnel", 0.10, 0.50, 0.33, 0.01, format="%.0f%%")
             operations_pct = st.slider("Operations", 0.05, 0.40, 0.22, 0.01, format="%.0f%%")
             rm_pct = st.slider("Repairs & Maintenance", 0.02, 0.20, 0.06, 0.01, format="%.0f%%")
@@ -287,7 +287,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("### About")
-    st.markdown("Built by **Shreyas**  \nMichigan Ross MBA 2026  \nICLEI Africa MAP Capstone")
+    st.markdown("Built by **Shreyas**  \nMichigan Ross MBA 2026")
     st.markdown("[GitHub](https://github.com/snagaraj1510/mmfm-analyzer)")
 
 _sv = {
@@ -322,7 +322,7 @@ revenue_inputs, capex_inputs, opex_inputs = _build_inputs(_sv)
 # ── Page title ───────────────────────────────────────────────────────────────
 st.title("📊 MMFM Analyzer")
 st.markdown(
-    "*Municipal Market Financial Model | ICLEI Africa MAP Capstone*"
+    "*Municipal Market Financial Model | MBA MAP Capstone*"
 )
 
 # ── Tabs ─────────────────────────────────────────────────────────────────────

@@ -70,7 +70,7 @@ class MarketConfig(BaseModel):
     fx_rate_tzs_usd: float = 2650.0          # TZS per 1 USD (approx)
     fx_rate_mzn_usd: float = 63.8            # MZN per 1 USD (approx)
 
-    # Infrastructure CAPEX benchmarks (USD, from ICLEI financial model)
+    # Infrastructure CAPEX benchmarks (USD)
     solar_pv_capex_per_kw_usd: float = 1070.0        # USD/kW installed
     cold_storage_capex_per_m3_usd: float = 1527.78   # USD/m³
 

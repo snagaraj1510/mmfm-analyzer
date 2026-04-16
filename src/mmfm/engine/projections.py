@@ -69,17 +69,17 @@ class RevenueInputs:
     # ── Facility type breakdown ───────────────────────────────────────────────
     lockup_count: int = 0
     lockup_utilization: float = 0.88
-    lockup_collection_rate: float = 0.46      # ReMark benchmark
+    lockup_collection_rate: float = 0.46      # industry benchmark
     lockup_monthly_rent_usd: float = 25.0
 
     stall_count: int = 0
     stall_utilization: float = 0.56
-    stall_collection_rate: float = 0.21       # ReMark benchmark
+    stall_collection_rate: float = 0.21       # industry benchmark
     stall_monthly_rent_usd: float = 5.0
 
     pitch_count: int = 0
     pitch_utilization: float = 0.49
-    pitch_collection_rate: float = 0.23       # ReMark benchmark
+    pitch_collection_rate: float = 0.23       # industry benchmark
     pitch_monthly_rent_usd: float = 3.0
 
     # ── Produce / wholesale ───────────────────────────────────────────────────
@@ -101,13 +101,13 @@ class CapexInputs:
 
     # ── Cold storage module ───────────────────────────────────────────────────
     cold_storage_units: int = 0
-    cold_storage_cost_per_m3: float = 1527.78   # ICLEI benchmark
+    cold_storage_cost_per_m3: float = 1527.78   # industry benchmark
     cold_storage_m3_per_unit: float = 18.0
     cold_storage_lead_time_months: int = 6
 
     # ── Solar PV module ───────────────────────────────────────────────────────
     solar_pv_kw: float = 0.0
-    solar_pv_cost_per_kw: float = 1070.0        # ICLEI benchmark
+    solar_pv_cost_per_kw: float = 1070.0        # industry benchmark
     solar_pv_lead_time_months: int = 3
 
 

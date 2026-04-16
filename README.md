@@ -1,10 +1,10 @@
 # MMFM Analyzer
 
-**Municipal Market Financial Model Analyzer** — ICLEI Africa / MBA MAP Capstone
+**Municipal Market Financial Model Analyzer** — MBA MAP Capstone
 
 > A CLI + web dashboard for scenario analysis, sensitivity testing, Monte Carlo simulation, and AI-powered narrative generation on municipal market revitalization investments across East Africa.
 
-Built as the analytical engine for a MAP capstone project with ICLEI Africa, evaluating investment readiness across market sites in Sub-Saharan Africa. Training data comes from Kenya, Tanzania, Malawi, Zambia, and Mozambique.
+Built as the analytical engine for a MAP capstone project evaluating investment readiness across market sites in Sub-Saharan Africa. Field data covers Kenya, Tanzania, Malawi, Zambia, and Mozambique.
 
 ---
 
@@ -42,7 +42,7 @@ The sidebar is the primary input surface — configure your market, then explore
 
 ## Demo Portfolio
 
-Five MAP markets pre-loaded, grounded in ICLEI Africa source data.
+Five MAP markets pre-loaded, grounded in field source data.
 
 ```bash
 mmfm compare          # Terminal table
@@ -55,9 +55,9 @@ mmfm compare --format json
 
 - **Financial engine** — NPV, IRR, payback, DSCR, operating margins (deterministic Python, no AI)
 - **Scenario analysis** — Base / optimistic / pessimistic with source-calibrated fee collection rates (Lusaka avg: 38%)
-- **Revenue models** — Simple occupancy, facility-type breakdown (ReMark benchmarks), produce/wholesale commission, combined
+- **Revenue models** — Simple occupancy, facility-type breakdown (field benchmarks), produce/wholesale commission, combined
 - **Structured debt** — Senior + concessional tranches with annuity-formula debt service
-- **Technology modules** — Cold storage (ICLEI $1,528/m³) and solar PV ($1,070/kW) CapEx + O&M
+- **Technology modules** — Cold storage ($1,528/m³) and solar PV ($1,070/kW) CapEx + O&M
 - **Sensitivity + tornado** — Sweep 7 variables, ranked by NPV impact
 - **Monte Carlo** — 10K iterations, P10/P50/P90 distribution, probability of positive NPV
 - **AI narrative** — Executive summaries via Ollama (free, local) or Claude API (optional)
@@ -185,8 +185,8 @@ pytest -k "hallucination" # Anti-hallucination tests
 ## Data Sources
 
 All market-specific constants are derived from MAP source documents:
-- ICLEI Africa Financial Model (Pemba Eduardo Mondlane data)
-- ReMark Final Report
+- Municipal market financial model data (Pemba Eduardo Mondlane)
+- Market operator fund model (fee collection and cost structure benchmarks)
 - Lusaka Municipal Markets Report (fee collection benchmarks)
 - Lilongwe Markets Report (Tsoka/Lizulu MIRI scores)
 - Kisumu Income Statement (Solar PV CAPEX stress-test data)
@@ -195,6 +195,6 @@ All market-specific constants are derived from MAP source documents:
 
 ## About
 
-Built by **Shreyas** — Michigan Ross MBA 2026, MAP capstone with ICLEI Africa.
+Built by **Shreyas** — Michigan Ross MBA 2026.
 
 This tool demonstrates production-grade financial modeling + AI tooling for the type of infrastructure investment analysis relevant to municipal governments and development finance institutions across sub-Saharan Africa.

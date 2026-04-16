@@ -2,7 +2,7 @@
 Demo market fixtures for MMFM Analyzer tests and CLI demos.
 
 All values are derived from MAP source documents:
-- ICLEI Africa Financial Model (Pemba Eduardo Mondlane)
+- Municipal market financial data (Pemba Eduardo Mondlane)
 - Lusaka Market Report (Chainda, Mandevu)
 - Lilongwe Report (Tsoka, Lizulu)
 - Kisumu Income Statement (stress-test anchor)
@@ -11,7 +11,7 @@ from __future__ import annotations
 from mmfm.engine.comparison import MarketProfile
 
 # Pemba Eduardo Mondlane — optimistic anchor
-# Source: ICLEI Financial Model, Mozambique
+# Source: Municipal market field data, Mozambique
 PEMBA_EDUARDO_MONDLANE = MarketProfile(
     name="Pemba Eduardo Mondlane",
     country="Mozambique",
