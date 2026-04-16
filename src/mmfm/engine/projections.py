@@ -12,6 +12,38 @@ from typing import Optional
 
 
 @dataclass
+class DebtStructure:
+    """
+    Structured debt inputs for auto-calculating annual debt service.
+    Supports a senior + concessional tranche common in development finance.
+    """
+    senior_debt_amount: float = 0.0
+    senior_rate: float = 0.10
+    senior_tenor_years: int = 8
+    subordinate_debt_amount: float = 0.0
+    subordinate_rate: float = 0.065
+    subordinate_tenor_years: int = 10
+
+
+def calculate_debt_service(debt: DebtStructure) -> float:
+    """
+    Calculate combined annual debt service using annuity formula.
+    Returns 0.0 if both amounts are zero.
+    """
+    def _annuity(principal: float, rate: float, n: int) -> float:
+        if principal <= 0 or n <= 0:
+            return 0.0
+        if rate == 0:
+            return principal / n
+        return principal * rate * (1 + rate) ** n / ((1 + rate) ** n - 1)
+
+    return (
+        _annuity(debt.senior_debt_amount, debt.senior_rate, debt.senior_tenor_years)
+        + _annuity(debt.subordinate_debt_amount, debt.subordinate_rate, debt.subordinate_tenor_years)
+    )
+
+
+@dataclass
 class RevenueInputs:
     """Inputs for revenue projection."""
     base_stall_rental_income: float        # Annual stall rental at 100% occupancy
@@ -27,6 +59,36 @@ class RevenueInputs:
     # Source data: Lusaka system avg 0.38, Mandevu worst case 0.10, best case 1.0.
     fee_collection_rate: float = 1.0      # Default: full collection (conservative assumption)
 
+    # ── Revenue model ─────────────────────────────────────────────────────────
+    # "simple"         : existing behaviour (base_stall_rental_income × occupancy)
+    # "facility_types" : lock-up / stall / pitch with per-type utilisation + collection
+    # "produce"        : commission on wholesale produce throughput
+    # "combined"       : facility_types + produce
+    revenue_model: str = "simple"
+
+    # ── Facility type breakdown ───────────────────────────────────────────────
+    lockup_count: int = 0
+    lockup_utilization: float = 0.88
+    lockup_collection_rate: float = 0.46      # ReMark benchmark
+    lockup_monthly_rent_usd: float = 25.0
+
+    stall_count: int = 0
+    stall_utilization: float = 0.56
+    stall_collection_rate: float = 0.21       # ReMark benchmark
+    stall_monthly_rent_usd: float = 5.0
+
+    pitch_count: int = 0
+    pitch_utilization: float = 0.49
+    pitch_collection_rate: float = 0.23       # ReMark benchmark
+    pitch_monthly_rent_usd: float = 3.0
+
+    # ── Produce / wholesale ───────────────────────────────────────────────────
+    produce_throughput_tonnes: float = 0.0
+    produce_price_usd_per_tonne: float = 380.0
+    commission_rate: float = 0.05
+    food_waste_factor: float = 0.20
+    produce_price_escalation: float = 0.08
+
 
 @dataclass
 class CapexInputs:
@@ -37,6 +99,17 @@ class CapexInputs:
     grant_amount: float = 0.0             # Grant funding
     grant_disbursement_year: int = 0      # Year grant is received
 
+    # ── Cold storage module ───────────────────────────────────────────────────
+    cold_storage_units: int = 0
+    cold_storage_cost_per_m3: float = 1527.78   # ICLEI benchmark
+    cold_storage_m3_per_unit: float = 18.0
+    cold_storage_lead_time_months: int = 6
+
+    # ── Solar PV module ───────────────────────────────────────────────────────
+    solar_pv_kw: float = 0.0
+    solar_pv_cost_per_kw: float = 1070.0        # ICLEI benchmark
+    solar_pv_lead_time_months: int = 3
+
 
 @dataclass
 class OpexInputs:
@@ -44,6 +117,23 @@ class OpexInputs:
     base_opex: float                       # Annual operating costs at Year 1
     opex_escalation_rate: float            # Annual opex escalation
     debt_service_annual: float = 0.0       # Annual debt service (principal + interest)
+
+    # ── OpEx model ────────────────────────────────────────────────────────────
+    # "fixed"       : base_opex × escalation (existing behaviour)
+    # "pct_revenue" : opex = % of revenue (scales with market size)
+    opex_model: str = "fixed"
+    cost_escalation_rate: float = 0.05   # separate from fee escalation
+
+    # ── % of revenue breakdown (used when opex_model == "pct_revenue") ────────
+    personnel_pct: float = 0.33
+    operations_pct: float = 0.22
+    rm_pct: float = 0.06
+    finance_admin_pct: float = 0.07
+
+    # ── Technology O&M ────────────────────────────────────────────────────────
+    cold_storage_utilization: float = 0.55
+    cold_storage_om_per_tonne: float = 93.0    # USD/tonne/year
+    solar_pv_om_per_kw: float = 53.50          # USD/kW/year
 
 
 @dataclass
@@ -126,6 +216,13 @@ def project_cash_flows(
         if t == capex.grant_disbursement_year and capex.grant_amount > 0:
             year_capex = max(0.0, year_capex - capex.grant_amount)
 
+        # Technology modules deploy in Year 1 (lead times < 12 months)
+        if t == 1:
+            year_capex += (
+                capex.cold_storage_units * capex.cold_storage_m3_per_unit * capex.cold_storage_cost_per_m3
+                + capex.solar_pv_kw * capex.solar_pv_cost_per_kw
+            )
+
         # ── REVENUE (operational years only) ────────────────────────────
         if t == 0:
             year_revenue = 0.0
@@ -145,20 +242,70 @@ def project_cash_flows(
             fee_factor = (1 + revenue.fee_escalation_rate) ** (t - 1)
             inflation_factor = (1 + inflation_rate) ** (t - 1)
 
-            stall_rental = revenue.base_stall_rental_income * year_occupancy * rental_factor
-            vendor_fees = revenue.vendor_fees_annual * fee_factor
-            levies = revenue.market_levies_annual * inflation_factor
-            other = revenue.other_income_annual * inflation_factor
+            if revenue.revenue_model == "facility_types":
+                lockup_rev = (revenue.lockup_count * revenue.lockup_utilization
+                              * revenue.lockup_collection_rate
+                              * revenue.lockup_monthly_rent_usd * 12 * rental_factor)
+                stall_rev = (revenue.stall_count * revenue.stall_utilization
+                             * revenue.stall_collection_rate
+                             * revenue.stall_monthly_rent_usd * 12 * rental_factor)
+                pitch_rev = (revenue.pitch_count * revenue.pitch_utilization
+                             * revenue.pitch_collection_rate
+                             * revenue.pitch_monthly_rent_usd * 12 * rental_factor)
+                year_revenue = lockup_rev + stall_rev + pitch_rev
 
-            year_revenue = (stall_rental + vendor_fees + levies + other) * revenue.fee_collection_rate
+            elif revenue.revenue_model == "produce":
+                price_factor = (1 + revenue.produce_price_escalation) ** (t - 1)
+                effective_throughput = revenue.produce_throughput_tonnes * (1 - revenue.food_waste_factor)
+                year_revenue = (effective_throughput * revenue.produce_price_usd_per_tonne
+                                * price_factor * revenue.commission_rate)
+
+            elif revenue.revenue_model == "combined":
+                lockup_rev = (revenue.lockup_count * revenue.lockup_utilization
+                              * revenue.lockup_collection_rate
+                              * revenue.lockup_monthly_rent_usd * 12 * rental_factor)
+                stall_rev = (revenue.stall_count * revenue.stall_utilization
+                             * revenue.stall_collection_rate
+                             * revenue.stall_monthly_rent_usd * 12 * rental_factor)
+                pitch_rev = (revenue.pitch_count * revenue.pitch_utilization
+                             * revenue.pitch_collection_rate
+                             * revenue.pitch_monthly_rent_usd * 12 * rental_factor)
+                price_factor = (1 + revenue.produce_price_escalation) ** (t - 1)
+                effective_throughput = revenue.produce_throughput_tonnes * (1 - revenue.food_waste_factor)
+                produce_rev = (effective_throughput * revenue.produce_price_usd_per_tonne
+                               * price_factor * revenue.commission_rate)
+                year_revenue = lockup_rev + stall_rev + pitch_rev + produce_rev
+
+            else:  # "simple" — unchanged existing behaviour
+                stall_rental = revenue.base_stall_rental_income * year_occupancy * rental_factor
+                vendor_fees = revenue.vendor_fees_annual * fee_factor
+                levies = revenue.market_levies_annual * inflation_factor
+                other = revenue.other_income_annual * inflation_factor
+                year_revenue = (stall_rental + vendor_fees + levies + other) * revenue.fee_collection_rate
 
         # ── OPEX ──────────────────────────────────────────────────────────
         if t == 0:
             year_opex = 0.0
             year_debt_service = 0.0
         else:
-            opex_factor = (1 + opex.opex_escalation_rate) ** (t - 1)
-            year_opex = opex.base_opex * opex_factor
+            esc_rate = opex.cost_escalation_rate
+            opex_factor = (1 + esc_rate) ** (t - 1)
+
+            if opex.opex_model == "pct_revenue" and year_revenue > 0:
+                total_pct = (opex.personnel_pct + opex.operations_pct
+                             + opex.rm_pct + opex.finance_admin_pct)
+                year_opex = year_revenue * total_pct
+            else:
+                year_opex = opex.base_opex * opex_factor
+
+            # Technology O&M
+            if capex.cold_storage_units > 0:
+                stored_tonnes = (capex.cold_storage_units * capex.cold_storage_m3_per_unit
+                                 * 0.1667 * opex.cold_storage_utilization * 365 / 1000)
+                year_opex += stored_tonnes * opex.cold_storage_om_per_tonne * opex_factor
+            if capex.solar_pv_kw > 0:
+                year_opex += capex.solar_pv_kw * opex.solar_pv_om_per_kw * opex_factor
+
             year_debt_service = opex.debt_service_annual
 
         # ── DERIVED METRICS ───────────────────────────────────────────────
