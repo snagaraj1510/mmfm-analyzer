@@ -1,10 +1,10 @@
 # MMFM Analyzer
 
-**Municipal Market Financial Model Analyzer** — ICLEI Africa / MAP Capstone
+**Municipal Market Financial Model Analyzer** — ICLEI Africa / MBA MAP Capstone
 
 > A CLI + web dashboard for scenario analysis, sensitivity testing, Monte Carlo simulation, and AI-powered narrative generation on municipal market revitalization investments across East Africa.
 
-Built as the analytical engine for a MAP capstone project with ICLEI Africa, evaluating investment readiness across market sites in Kenya, Tanzania, Malawi, Zambia, and Mozambique.
+Built as the analytical engine for a MAP capstone project with ICLEI Africa, evaluating investment readiness across market sites in Sub-Saharan Africa. Training data comes from Kenya, Tanzania, Malawi, Zambia, and Mozambique.
 
 ---
 
